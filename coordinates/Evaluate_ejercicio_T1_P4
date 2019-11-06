@@ -1,0 +1,24 @@
+#  Prereqquisites
+#    pip3 install sympy
+#  Runner
+#  python3 vectores.py
+import math
+import sympy
+from sympy import *
+init_printing(use_unicode=True)
+
+rho,theta,z = symbols('rho,theta,z')
+
+Ar = 3 * cos(theta)
+Ath = -2 * rho
+Az = z
+
+print(u"En P(4,60º,5)")
+Pr = 4
+Pth= math.radians(60)
+Pz = 5
+
+Ar = Ar.subs(theta, Pth)
+Ath = Ath.subs(rho, Pr)
+Az = Az.subs(z,5)
+print(Ar,Ath,Az )
