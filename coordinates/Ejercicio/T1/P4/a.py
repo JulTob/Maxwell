@@ -20,3 +20,5 @@ print(u" P(4,60º,5)")
     Ar, Ath, Az,
     4, math.radians(60), 5
     )
+
+print(Ar, Ath, Az)
