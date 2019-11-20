@@ -1,7 +1,13 @@
 #  Prereqquisites
+
+# virtualenv -p python3 maxwell
+# . maxwell/bin/activate
 #    pip3 install sympy
+
 #  Runner
-#  python3 vectores.py
+#  python3 Ej_T1_P4.py
+
+
 import math
 import sympy
 from sympy import *
