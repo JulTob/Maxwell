@@ -9,6 +9,7 @@ import coordinates
 from coordinates import *
 
 Volt = symbols(u'𝖵')
+Electric_Field = symbols(u'𝔼')
 
 
 def Electric_Field_From_Voltage_X( Voltage ):
