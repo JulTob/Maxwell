@@ -2,39 +2,46 @@ import math
 import sympy
 from sympy import *
 
-rho,phi,z = symbols(u'ρ,ϕ,z', real = True)
+r, theta, phi = symbols(u'r, ϑ, ϕ', positive = True, real = True)
 #pi = symbols(u'π')
 '''
-ρ : Real > 0
-ϕ : 0..2π
-z : Real
+r : Real
+ϑ : 0..π   theta
+ϕ : 0..2π  phi
 '''
 
-def modulus( A_rho, A_phi, A_z):
+def modulus( A_r, A_phi, A_theta):
     "Module of a vector"
-    result = math.sqrt(A_rho*A_rho+A_z*A_z);
-    return result;
+    return A_r;
 
-
-def evaluate( A_rho, A_phi, A_z,  P_rho, P_phi, P_z):
-    "Evaluate at point"
-    result_rho = A_rho.subs(rho,P_rho).subs(phi,P_phi).subs(z,P_z)
-    result_phi = A_phi.subs(rho,P_rho).subs(phi,P_phi).subs(z,P_z)
-    result_z  = A_z.subs(rho,P_rho).subs(phi,P_phi).subs(z,P_z)
-    return (result_rho, result_phi, result_z)
-
+def unitarium( A_r, A_phi,A_theta):
+    "Unitarium of a vector"
+    return 1, A_phi, A_theta;
 
 def volumetric_integral(
     f,
     r0 = 0,
-    rf = rho,
+    rf = r,
     phi0 = 0,
     phif = 2*pi,
-    z0 = 0,
-    zf = z):
-    ''' Integrates in cilindrics'''
-    result = f*rho
-    result = integrate(result,(rho, r0, rf))
+    theta0 = 0,
+    thetaf = pi):
+    ''' Integrates in sferics'''
+    result = f*r*r*sin(theta)
+    result = integrate(result,(r, r0, rf))
     result = integrate(result,(phi, phi0, phif))
-    result = integrate(result,(z, z0, zf))
+    result = integrate(result,(theta, theta0, thetaf))
     return result
+
+def gradient(U):
+    Vr = diff(U,r)
+    Vt = diff(U,theta) / r
+    Vp = diff(U,phi)  / (r**2 * sin(theta) )
+    return (Vr, Vt, Vp)
+
+
+def divergence(Ar,Ath,Aph):
+    Vr  = diff( r**2 * Ar,r) / (r**2)
+    Vth = diff(Ath * sin(theta) ,theta) / ( r * sin(theta))
+    Vph = diff(Aph,phi)  / (r * sin(theta) )
+    return (Vr + Vth + Vph)
