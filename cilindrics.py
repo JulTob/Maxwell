@@ -2,7 +2,7 @@ import math
 import sympy
 from sympy import *
 
-rho,phi,z = symbols(u'ρ,ϕ,z')
+rho,phi,z = symbols(u'ρ,ϕ,z', real = True)
 #pi = symbols(u'π')
 '''
 ρ : Real > 0
