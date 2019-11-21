@@ -8,9 +8,47 @@ import cilindrics as C
 import cartesians as X
 
 zero = symbols('zero')
-pi = symbols(u'π')
+#pi = symbols(u'π')
 constant = symbols('C')
+ux, uy, uz = symbols(u'𝑥̂,𝑦̂,𝑧̂', positive = True, integer=True)
+up, uA  = symbols(u'ρ̂,ϕ̂', positive = True, integer=True)
+uR, uB  = symbols(u'r̂,ϑ̂', positive = True, integer=True)
 
+def on_x(f):
+    return f.subs({
+        uR : cos(S.theta)*uz + sin(S.theta)*up,
+        uB : -sin(S.theta)*uz + cos(S.theta)*up
+    }).subs({
+        up : ux * cos(C.phi) + sin(C.phi) * uy,
+        uA : -ux * sin(C.phi) + cos(C.phi) * uy,
+    }).subs({
+        ux : 1,
+        uy : 0,
+        uz : 0})
+
+def on_y(f):
+    return f.subs({
+        uR : cos(S.theta)*uz + sin(S.theta)*up,
+        uB : -sin(S.theta)*uz + cos(S.theta)*up
+    }).subs({
+        up : ux * cos(C.phi) + sin(C.phi) * uy,
+        uA : -ux * sin(C.phi) + cos(C.phi) * uy,
+    }).subs({
+        ux : 0,
+        uy : 1,
+        uz : 0})
+
+def on_z(f):
+    return f.subs({
+        uR : cos(S.theta)*uz + sin(S.theta)*up,
+        uB : -sin(S.theta)*uz + cos(S.theta)*up
+    }).subs({
+        up : ux * cos(C.phi) + sin(C.phi) * uy,
+        uA : -ux * sin(C.phi) + cos(C.phi) * uy,
+    }).subs({
+        ux : 0,
+        uy : 0,
+        uz : 1})
 
 
 def cilindrics_to_cartesians( Arho, Atheta, Al):
@@ -105,3 +143,47 @@ def cilindrics_to_sferics( Arho, ACtheta, Al):
     Aphi = simplify(Aphi)
     Atheta = simplify(Atheta)
     return (Ar, Aphi, Atheta)
+
+
+def sferics_to_cilindrics( Ar, Atheta, ASphi):
+    '''Changes from Sferics to Cilindrics'''
+    Arho = simplify(sin(S.theta) * Ar + cos(S.theta) * Atheta)
+    Aphi = simplify(ASphi)
+    Az = simplify( cos(S.theta) * Ar - sin(S.theta) * Atheta )
+    Arho = Arho.subs({
+        S.r: sqrt(C.rho**2 + C.z**2),
+        S.phi: C.phi,
+        S.theta: acos(C.z/(sqrt(C.rho**2 + C.z**2)))
+    })
+    Aphi = Aphi.subs({
+        S.r: sqrt(C.rho**2 + C.z**2),
+        S.phi: C.phi,
+        S.theta: acos(C.z/(sqrt(C.rho**2 + C.z**2)))
+    })
+    Az = Az.subs({
+        S.r: sqrt(C.rho**2 + C.z**2),
+        S.phi: C.phi,
+        S.theta: acos(C.z/(sqrt(C.rho**2 + C.z**2)))
+    })
+    Arho = simplify(Arho)
+    Aphi = simplify(Aphi)
+    Az = simplify(Az)
+    return (Arho, Aphi, Az)
+
+
+def functionS2C(f):
+    r = f.subs(S.theta, acos(C.z/S.r)).subs({
+        S.r : sqrt(C.rho**2 + C.z**2),
+        S.phi : C.phi})
+    return r
+
+def functionC2X(f):
+    r = f.subs(C.phi, atan( X.y / X.x )).subs({
+        C.rho : sqrt(X.x**2 + X.y**2),
+        C.z : X.z})
+    return r
+
+def functionS2X(f):
+    c = functionS2C(f)
+    x = functionC2X(c)
+    return x
