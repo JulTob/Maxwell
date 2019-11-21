@@ -6,7 +6,7 @@ import math
 import sympy
 from sympy import *
 
-x,y,z = symbols(u'𝑥,𝑦,𝑧')
+x,y,z = symbols(u'𝑥,𝑦,𝑧', real = True)
 
 
 
@@ -90,3 +90,10 @@ def gradient(U):
     Vy = diff(U,y)
     Vz = diff(U,z)
     return (Vx, Vy, Vz)
+
+
+def divergence(Ax,Ay,Az):
+    Vx = diff(Ax,x)
+    Vy = diff(Ay,y)
+    Vz = diff(Az,z)
+    return (Vx + Vy + Vz)
