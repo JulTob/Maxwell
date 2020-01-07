@@ -1,0 +1,203 @@
+
+
+
+#cas
+h;
+Coord;
+
+Coords():=
+BEGIN
+  return 0;
+END;
+
+Cart():=
+BEGIN
+ Coord:=[x,y,z];
+ h:=H_Cart();
+ return [x,y,z];
+END;
+
+
+SetCart():=
+BEGIN
+ Coord:=[x,y,z];
+ h:=H_Cart();
+END;
+
+SetCil():=
+BEGIN
+ Coord:=Cil();
+ h:=H_Cil();
+END;
+
+SetEsf():=
+BEGIN
+ Coord:=Esf();
+ h:=H_Esf();
+END;
+
+grd(V):=
+BEGIN
+  return GradH(V,Coord,h); 
+END;
+
+div(V):=
+BEGIN
+  return DivH(V,Coord,h); 
+END;
+
+
+crl(V):=
+BEGIN
+  return CurlH(V,Coord,h); 
+END;
+
+
+
+
+H_Cart():=
+BEGIN
+ return [1,1,1];
+END;
+
+Cil():=
+BEGIN
+ return [ρ,α,z];
+END;
+
+H_Cil():=
+BEGIN
+ return [1,ρ,1];
+END;
+
+Esf():=
+BEGIN
+ return [r,φ,α];
+END;
+
+H_Esf():=
+BEGIN
+ return [1,r,r^2*SIN(α)];
+END;
+
+GradH(V,X,H):=
+BEGIN
+  Vh1:=(1/H(1))*(
+        diff( 
+           H(1)*V,
+           X(1))
+       );
+  Vh2:=(1/H(2))*(
+        diff( 
+           H(2)*V,
+           X(2))
+       );
+    Vh3:=(1/H(3))*(
+        diff( 
+           H(3)*V,
+           X(3))
+       );
+  return [Vh1,Vh2,Vh3]; 
+END;
+
+
+DivH(V,X,H):=
+BEGIN
+  Ha:=H(1)*H(2)*H(3);
+  Vh1:=(1/Ha)*(
+        diff( 
+           V(1)*H(2)*H(3),
+           X(1))
+       );
+  Vh2:=(1/Ha)*(
+        diff( 
+           H(1)*V(2)*H(3),
+           X(2))
+       );
+  Vh3:=(1/Ha)*(
+        diff( 
+           H(1)*H(2)*V(3),
+           X(3))
+       );
+  return Vh1+Vh2+Vh3; 
+END;
+
+
+CurlH(V,X,H):=
+BEGIN
+  Ha:=H(1)*H(2)*H(3);
+  Vh1:=H(1)*(
+        diff(H(3)*V(3),X(2))
+       -diff(H(2)*V(2),X(3))
+       )/Ha;
+  Vh2:=H(2)*(
+        diff(H(1)*V(1),X(3))
+       -diff(H(3)*V(3),X(1))
+       )/Ha; 
+  Vh3:=H(3)*(
+        diff(H(2)*V(2),X(1))
+       -diff(H(1)*V(1),X(2))
+       )/Ha;
+  return [Vh1,Vh2,Vh3]; 
+END;
+
+
+Laplacian(V,X,H):=
+BEGIN
+  Ha:=H(1)*H(2)*H(3);
+  Vh1:=(1/Ha)*(
+        diff(
+         diff( 
+           V*H(1)*H(2)*H(3),
+           X(1)),
+         X(1))
+       );
+  Vh2:=(1/Ha)*(
+       diff(
+         diff( 
+           V*H(1)*H(2)*H(3),
+           X(2)),
+         X(2))
+       );
+  Vh1:=(1/Ha)*(
+       diff(
+         diff( 
+           V*H(1)*H(2)*H(3),
+           X(3)),
+         X(3))
+       );
+  return Vh1+Vh2+Vh3; 
+END;
+
+
+Laplacian2(V,X,H):=
+BEGIN
+ return
+   DivH(
+     GradH(V,X,H)
+     ,X
+     ,H); 
+END;
+
+
+LaplacianV(V,X,H):=
+BEGIN
+ return (
+  GradH(
+    DivH(V,X,H),
+    X,
+    H)
+  -
+  CurlH(
+     CurlH(V,X,H)
+     ,X
+     ,H)
+ ); 
+END;
+
+dt(V):=
+BEGIN
+  return ∂(V,t);
+END;
+
+#end
