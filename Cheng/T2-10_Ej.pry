@@ -1,0 +1,36 @@
+
+
+import electrostatics
+from electrostatics import *
+
+
+
+'''
+Exercicio 2.9
+Determinar el campo electrico
+'''
+print("=====================")
+x = X.x
+y = X.y
+z = X.z
+
+V = x*y - 2*y*z
+Px, Py, Pz = 2,3,6
+pprint(V)
+
+
+dVx, dVy, dVz = X.gradient(V)
+pprint(dVx)
+pprint(dVy)
+pprint(dVz)
+
+divV = X.evaluate(
+    dVx, dVy, dVz,
+    2,3,6)
+
+pprint(divV)
+
+
+
+
+print("=====================")
